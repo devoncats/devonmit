@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Form() {
   const initialState = {
@@ -36,8 +36,8 @@ export default function Form() {
   })
 
   return (
-    <>
-      <form className='w-96 grid gap-4'>
+    <div className='flex gap-8 w-full'>
+      <form className='w-96 grid gap-4 flex-1'>
         <fieldset>
           <label htmlFor='type' className='block'>
             Type
@@ -162,15 +162,15 @@ export default function Form() {
         </fieldset>
       </form>
 
-      <div className='h-px w-full bg-[#e5e7eb]' />
+      <div className='h-screen w-px bg-[#e5e7eb]' />
 
       <textarea
         id='response'
         name='response'
-        className='w-full p-2 border rounded-lg resize-none'
+        className='w-full flex-1 p-2 border rounded-lg resize-none'
         value={response}
         readOnly
       ></textarea>
-    </>
+    </div>
   )
 }

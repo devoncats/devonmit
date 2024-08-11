@@ -1,52 +1,33 @@
 ---
 import Layout from '@/layouts/Layout.astro'
+import Background from '@/components/Background.astro'
+import Header from '@/components/Header.astro'
 import Form from '@/components/Form'
+import Hero from '@/components/Hero.astro'
 
-import GithubIcon from '@/icons/github.astro'
-import CatIcon from '@/icons/cat.astro'
 import ArrowRightIcon from '@/icons/arrow-right.astro'
 ---
 
 <Layout title='Home'>
-  <header>
-    <nav>
-      <ul class='w-full py-8 px-64 gap-4 flex text-2xl justify-end'>
-        <li><a href='https://devoncats.dev'><CatIcon /></a></li>
-        <li><a href='https://github.com/devoncats'><GithubIcon /></a></li>
-      </ul>
-    </nav>
-  </header>
+  <Background />
+  <Header />
 
-  <main class='min-h-screen grid place-items-center gap-4 py-12 relative'>
+  <main
+    class='min-h-screen grid place-items-center gap-16 py-12 px-32 relative'
+  >
     <nav class='px-4 py-1 border rounded-full text-xs'>
       <a class='flex items-center gap-2' href='https://devoncats.dev'
         >More projects at devoncats.dev <ArrowRightIcon />
       </a>
     </nav>
 
-    <section class='w-[36rem] grid gap-2'>
-      <h1 class='text-5xl font-medium text-pretty'>
-        Create a commit ⬆️ message the right way!
-      </h1>
+    <Hero />
 
-      <p class='text-sm'>
-        This tool will help you generate a commit message that follows the
-        conventional commit message format. This will help you and your team
-        understand the changes in your codebase.
-      </p>
-    </section>
-
-    <div class='fixed h-full w-full bg-white -z-10'>
-      <div
-        class='absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]'
-      >
-      </div>
-    </div>
-    <article
-      class='p-12 grid place-items-center gap-8 border rounded-lg shadow-sm bg-white'
+    <section
+      class='p-12 w-3/4 grid place-items-center gap-8 border rounded-lg shadow-sm bg-white'
     >
-      <h1 class='font-sans text-3xl'>Commit Generator ✨</h1>
+      <h2 class='font-sans text-3xl'>Commit Generator ✨</h2>
       <Form client:load />
-    </article>
+    </section>
   </main>
 </Layout>
