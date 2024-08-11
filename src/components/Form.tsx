@@ -66,15 +66,8 @@ export default function Form() {
         break
 
       default:
-        setResponse(
-          `${data.type}${data.scope ? `(${data.scope})` : ''}: ${data.title}${
-            data.description ? `\n\n${data.description}` : ''
-          }${data.isBreaking ? '\n\nBREAKING CHANGE' : ''}${
-            data.reference ? `\n\nCloses ${data.reference}` : ''
-          }${data.version ? `\n\nVersion: ${data.version}` : ''}${
-            data.user ? `\n\n${data.user}` : ''
-          }`,
-        )
+        const message = `${data.type}(${data.scope})${data.isBreaking ? '!' : ''}: ${data.title}\n\n${data.description}\n\n${data.reference ? `References: ${data.reference}\n` : ''}${data.version ? `Version: ${data.version}\n` : ''}${data.user ? `User: ${data.user}` : ''}`
+        setResponse(message)
         setData(data)
         break
     }
