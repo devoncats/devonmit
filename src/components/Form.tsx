@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
+import Select from '@/components/Select'
+import Input from '@/components/Input'
+import TextArea from '@/components/TextArea'
+import Checkbox from '@/components/Checkbox'
+import CopyIcon from '@/icons/copy'
 
 export default function Form() {
   const initialState = {
-    type: '',
+    type: 'init',
     scope: '',
     title: '',
     description: '',
@@ -12,165 +17,150 @@ export default function Form() {
     user: '',
   }
 
+  const options = [
+    { value: 'init', label: 'Initial' },
+    { value: 'merge', label: 'Merge' },
+    { value: 'revert', label: 'Revert' },
+    { value: 'feat', label: 'Feature' },
+    { value: 'fix', label: 'Fix' },
+    { value: 'refactor', label: 'Refactor' },
+    { value: 'perf', label: 'Performance' },
+    { value: 'style', label: 'Style' },
+    { value: 'test', label: 'Test' },
+    { value: 'docs', label: 'Documentation' },
+    { value: 'build', label: 'Build' },
+    { value: 'ci', label: 'CI' },
+    { value: 'chore', label: 'Chore' },
+  ]
+
   const [data, setData] = useState(initialState)
   const [response, setResponse] = useState('')
 
   const handleChange = (event: React.ChangeEvent<any>) => {
-    if (event.target.type === 'checkbox') {
-      setData({ ...data, [event.target.name]: event.target.checked })
-    } else {
-      const { name, value } = event.target
-      setData({ ...data, [name]: value })
-    }
+    const { name, value } = event.target
+    setData({ ...data, [name]: value })
+    console.log(data)
+  }
+
+  const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = event.target
+    setData({ ...data, [name]: checked })
+    console.log(data)
   }
 
   useEffect(() => {
-    const commitMessage = `${data.type}${data.scope ? `(${data.scope})` : ''}${data.isBreaking ? '!' : ''}: ${
-      data.title
-    }${data.description ? `\n\n${data.description}` : ''}
-    ${data.reference ? `\nReference: ${data.reference}` : ''}${
-      data.version ? `\nVersion: ${data.version}` : ''
-    }${data.user ? `\nUser: ${data.user}` : ''}`
+    switch (data.type) {
+      case 'init':
+        setResponse('chore: init')
+        setData(initialState)
+        break
 
-    setResponse(commitMessage)
-  })
+      case 'merge':
+        setResponse('Merge branch')
+        setData({ ...initialState, type: 'merge' })
+        break
+
+      case 'revert':
+        setResponse('Revert changes')
+        setData({ ...initialState, type: 'revert' })
+        break
+
+      default:
+        setResponse(
+          `${data.type}${data.scope ? `(${data.scope})` : ''}: ${data.title}${
+            data.description ? `\n\n${data.description}` : ''
+          }${data.isBreaking ? '\n\nBREAKING CHANGE' : ''}${
+            data.reference ? `\n\nCloses ${data.reference}` : ''
+          }${data.version ? `\n\nVersion: ${data.version}` : ''}${
+            data.user ? `\n\n${data.user}` : ''
+          }`,
+        )
+        setData(data)
+        break
+    }
+  }, [data])
 
   return (
-    <div className='flex gap-8 w-full'>
-      <form className='w-96 grid gap-4 flex-1'>
-        <fieldset>
-          <label htmlFor='type' className='block'>
-            Type
-          </label>
-          <select
-            id='type'
-            name='type'
-            className='w-full p-2 border rounded-lg'
-            value={data.type}
-            onChange={handleChange}
-          >
-            <option value='init'>Initial</option>
-            <option value='merge'>Merge</option>
-            <option value='revert'>Revert</option>
-            <option value='feat'>Feature</option>
-            <option value='fix'>Fix</option>
-            <option value='refactor'>Refactor</option>
-            <option value='perf'>Performance</option>
-            <option value='style'>Style</option>
-            <option value='test'>Test</option>
-            <option value='docs'>Documentation</option>
-            <option value='build'>Build</option>
-            <option value='ci'>CI</option>
-            <option value='chore'>Chore</option>
-          </select>
-        </fieldset>
+    <section className='xl:flex grid gap-8 w-full'>
+      <form className='flex-1 grid gap-3'>
+        <Select
+          label='Type'
+          value={data.type}
+          options={options}
+          handleChange={handleChange}
+        />
 
-        <fieldset>
-          <label htmlFor='scope' className='block'>
-            Scope
-          </label>
-          <input
-            id='scope'
-            name='scope'
-            type='text'
-            className='w-full p-2 border rounded-lg'
-            value={data.scope}
-            onChange={handleChange}
-          />
-        </fieldset>
+        <Input
+          label='Scope'
+          value={data.scope}
+          type={data.type}
+          handleChange={handleChange}
+        />
 
-        <fieldset>
-          <label htmlFor='title' className='block'>
-            Title
-          </label>
-          <input
-            id='title'
-            name='title'
-            type='text'
-            className='w-full p-2 border rounded-lg'
-            value={data.title}
-            onChange={handleChange}
-          />
-        </fieldset>
+        <Input
+          label='Title'
+          value={data.title}
+          type={data.type}
+          handleChange={handleChange}
+        />
 
-        <fieldset>
-          <label htmlFor='description' className='block'>
-            Description
-          </label>
-          <textarea
-            id='description'
-            name='description'
-            className='w-full p-2 border rounded-lg resize-none'
-            value={data.description}
-            onChange={handleChange}
-          ></textarea>
-        </fieldset>
+        <TextArea
+          label='Description'
+          value={data.description}
+          type={data.type}
+          handleChange={handleChange}
+        />
 
-        <fieldset>
-          <label htmlFor='isBreaking' className='block'>
-            Breaking Change
-          </label>
-          <input
-            id='isBreaking'
-            name='isBreaking'
-            type='checkbox'
-            checked={data.isBreaking}
-            onChange={handleChange}
-          />
-        </fieldset>
+        <Checkbox
+          label='Breaking Change'
+          id='isBreaking'
+          value={data.isBreaking}
+          type={data.type}
+          handleChange={handleCheckbox}
+        />
 
-        <fieldset>
-          <label htmlFor='reference' className='block'>
-            Reference
-          </label>
-          <input
-            id='reference'
-            name='reference'
-            type='text'
-            className='w-full p-2 border rounded-lg'
-            value={data.reference}
-            onChange={handleChange}
-          />
-        </fieldset>
+        <Input
+          label='Reference'
+          value={data.reference}
+          type={data.type}
+          handleChange={handleChange}
+        />
 
-        <fieldset>
-          <label htmlFor='version' className='block'>
-            Version
-          </label>
-          <input
-            id='version'
-            name='version'
-            type='text'
-            className='w-full p-2 border rounded-lg'
-            value={data.version}
-            onChange={handleChange}
-          />
-        </fieldset>
+        <Input
+          label='Version'
+          value={data.version}
+          type={data.type}
+          handleChange={handleChange}
+        />
 
-        <fieldset>
-          <label htmlFor='user' className='block'>
-            User
-          </label>
-          <input
-            id='user'
-            name='user'
-            type='text'
-            className='w-full p-2 border rounded-lg'
-            value={data.user}
-            onChange={handleChange}
-          />
-        </fieldset>
+        <Input
+          label='User'
+          value={data.user}
+          type={data.type}
+          handleChange={handleChange}
+        />
       </form>
 
-      <div className='h-screen w-px bg-[#e5e7eb]' />
+      <span className='xl:w-px xl:h-auto h-px bg-[#e5e7eb]' />
 
-      <textarea
-        id='response'
-        name='response'
-        className='w-full flex-1 p-2 border rounded-lg resize-none'
-        value={response}
-        readOnly
-      ></textarea>
-    </div>
+      <section className='flex-1 relative'>
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(response.toString())
+          }}
+          className='absolute right-0 top-0 p-4'
+        >
+          <CopyIcon />
+        </button>
+
+        <textarea
+          id='response'
+          name='response'
+          className='w-full h-96 p-2 border rounded-lg resize-none'
+          value={response}
+          readOnly
+        ></textarea>
+      </section>
+    </section>
   )
 }
